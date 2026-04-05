@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Pago no completado — Fatlin AI</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#075985,#0c2d4e);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .card{background:#fff;border-radius:24px;padding:40px 28px;max-width:400px;width:100%;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,.4);animation:pop .4s cubic-bezier(.34,1.56,.64,1)}
+    @keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+    .icon{font-size:56px;margin-bottom:12px}
+    h1{font-size:22px;font-weight:800;color:#dc2626;margin-bottom:8px}
+    p{font-size:14px;color:#475569;line-height:1.6;margin-bottom:24px}
+    .btn{display:inline-block;background:#0c2d4e;color:#fff;font-weight:700;font-size:14px;padding:14px 28px;border-radius:14px;text-decoration:none;transition:opacity .15s}
+    .btn:hover{opacity:.85}
+    .note{font-size:11px;color:#94a3b8;margin-top:16px;line-height:1.5}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">😕</div>
+    <h1>Pago no completado</h1>
+    <p>El pago no fue procesado o fue cancelado. Tu progreso está guardado — puedes intentarlo nuevamente cuando quieras.</p>
+    <a href="https://fatlin.web.app" class="btn">Volver a Fatlin AI</a>
+    <div class="note">Puedes reintentar desde el panel de Logros → botón "🔒 Activar".</div>
+  </div>
+</body>
+</html>

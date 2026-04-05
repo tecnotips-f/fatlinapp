@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Pago exitoso — Fatlin AI</title>
+  <style>
+    /* Estilos mantenidos igual para consistencia visual */
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#075985,#0c2d4e);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .card{background:#fff;border-radius:24px;padding:40px 28px;max-width:400px;width:100%;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,.4);animation:pop .4s cubic-bezier(.34,1.56,.64,1)}
+    @keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+    .icon{font-size:56px;margin-bottom:12px}
+    h1{font-size:22px;font-weight:800;color:#15803d;margin-bottom:8px}
+    p{font-size:14px;color:#475569;line-height:1.6;margin-bottom:24px}
+    .btn{display:inline-block;background:#0c2d4e;color:#fff;font-weight:700;font-size:14px;padding:14px 28px;border-radius:14px;text-decoration:none;transition:opacity .15s}
+    .btn:hover{opacity:.85}
+    .note{font-size:11px;color:#94a3b8;margin-top:16px;line-height:1.5}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon" id="icon">⏳</div>
+    <h1 id="title">Confirmando pago...</h1>
+    <p id="msg">Estamos registrando tu certificado, un momento.</p>
+    <a href="https://fatlin.web.app" class="btn">Volver a Fatlin AI</a>
+    <div class="note" id="note">Esta ventana se cerrará automáticamente en unos segundos.</div>
+  </div>
+
+  <script>
+    (async () => {
+      const iconEl  = document.getElementById('icon');
+      const titleEl = document.getElementById('title');
+      const msgEl   = document.getElementById('msg');
+
+      try {
+        const raw = localStorage.getItem('fatlin_pending_order');
+        if (!raw) {
+          _handleSuccess(null, "¡Pago exitoso! Regresando...");
+          return;
+        }
+
+        let orderId, uid, level;
+        try {
+          ({ orderId, uid, level } = JSON.parse(raw));
+        } catch(parseErr) {
+          localStorage.removeItem('fatlin_pending_order');
+          _handleSuccess(null, "¡Pago exitoso! Verifica tu certificado en el juego.");
+          return;
+        }
+        const res  = await fetch('https://us-central1-fatlin.cloudfunctions.net/ppCaptureOrder', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ orderId, uid, level })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          // ✅ FIX Bug 2 — removeItem SOLO al confirmar éxito.
+          // Antes se borraba antes del if(data.success), lo que hacía
+          // que si el fetch fallaba o data.success era false, el dato
+          // se perdía y el usuario no podía reintentar.
+          localStorage.removeItem('fatlin_pending_order');
+          try {
+            const pending = JSON.parse(localStorage.getItem('fatlin_pay_pending') || '[]');
+            localStorage.setItem('fatlin_pay_pending',
+              JSON.stringify(pending.filter(l => l !== level)));
+          } catch(e) {}
+          _handleSuccess(level, "Tu certificado está activado. Regresando al juego...");
+        } else {
+          _handleError("Pago recibido", "Usa '¿Ya pagaste?' en el juego para activar.");
+        }
+      } catch (err) {
+        _handleError("Pago recibido", "Si el certificado no aparece, verifica manualmente en el juego.");
+      }
+
+      function _handleSuccess(level, message) {
+        iconEl.textContent  = '🎉';
+        titleEl.textContent = '¡Pago exitoso!';
+        msgEl.textContent   = message;
+
+        if (window.opener) {
+          // ✅ FIX Bug 2b — origin fijo 'https://fatlin.web.app'.
+          // window.location.origin es el origin de ESTA página (payment-success),
+          // que puede ser diferente al de la app principal. El postMessage debe
+          // apuntar al origin del RECEPTOR (fatlin.web.app), no del emisor.
+          window.opener.postMessage({ type: 'PAYMENT_SUCCESS', level: level }, 'https://fatlin.web.app');
+        }
+
+        setTimeout(() => {
+          if (window.opener) window.close();
+          else window.location.href = "https://fatlin.web.app";
+        }, 2500);
+      }
+
+      function _handleError(title, message) {
+        iconEl.textContent  = '⚠️';
+        titleEl.textContent = title;
+        msgEl.textContent   = message;
+        document.getElementById('note').style.display = 'none';
+      }
+    })();
+  </script>
+</body>
+</html>

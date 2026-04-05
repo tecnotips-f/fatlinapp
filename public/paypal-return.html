@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Procesando pago — Fatlin AI</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: linear-gradient(135deg, #0c2a4a 0%, #0f3460 100%);
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px; color: white;
+    }
+    .card {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 2rem;
+      padding: 2.5rem 2rem;
+      max-width: 420px; width: 100%;
+      text-align: center;
+      backdrop-filter: blur(12px);
+    }
+    .logo { font-size: 3rem; margin-bottom: .5rem; }
+    .brand { font-size: 1.2rem; font-weight: 800; letter-spacing: .1em; color: #38bdf8; text-transform: uppercase; margin-bottom: 1.5rem; }
+
+    /* Spinner */
+    .spinner { width: 52px; height: 52px; border: 4px solid rgba(56,189,248,.2); border-top: 4px solid #38bdf8; border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 1.25rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Success */
+    .check { font-size: 3.5rem; margin-bottom: .75rem; animation: pop .4s cubic-bezier(.34,1.56,.64,1); }
+    @keyframes pop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    /* Error */
+    .error-icon { font-size: 3rem; margin-bottom: .75rem; }
+
+    h2 { font-size: 1.25rem; font-weight: 800; margin-bottom: .5rem; }
+    p  { font-size: .9rem; color: rgba(255,255,255,.7); line-height: 1.6; margin-bottom: 1rem; }
+    .detail { font-size: .75rem; color: rgba(255,255,255,.4); font-family: monospace; background: rgba(0,0,0,.25); padding: .4rem .75rem; border-radius: .5rem; margin-bottom: 1.25rem; word-break: break-all; }
+
+    .btn {
+      display: inline-block; background: #0284c7; color: white;
+      border: none; border-radius: 1.5rem; padding: .75rem 2rem;
+      font-weight: 700; font-size: .9rem; cursor: pointer;
+      text-decoration: none; transition: opacity .2s;
+    }
+    .btn:hover { opacity: .85; }
+    .btn-outline {
+      background: transparent; border: 2px solid rgba(255,255,255,.3); color: rgba(255,255,255,.7);
+      margin-left: .5rem;
+    }
+
+    #state-loading p { color: rgba(255,255,255,.6); font-size: .9rem; }
+    #state-success { display: none; }
+    #state-error   { display: none; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">🎓</div>
+  <div class="brand">Fatlin AI</div>
+
+  <!-- CARGANDO -->
+  <div id="state-loading">
+    <div class="spinner"></div>
+    <h2>Procesando tu pago…</h2>
+    <p>Por favor espera, estamos confirmando tu certificado con PayPal.</p>
+  </div>
+
+  <!-- ÉXITO -->
+  <div id="state-success">
+    <div class="check">✅</div>
+    <h2>¡Pago confirmado!</h2>
+    <p>Tu certificado ha sido activado exitosamente.</p>
+    <div class="detail" id="cert-detail"></div>
+    <a href="https://fatlin.web.app" class="btn">🚀 Volver al juego</a>
+  </div>
+
+  <!-- ERROR -->
+  <div id="state-error">
+    <div class="error-icon">⚠️</div>
+    <h2 id="err-title">No se pudo confirmar</h2>
+    <p id="err-msg">Hubo un problema al procesar tu pago.</p>
+    <div class="detail" id="err-detail"></div>
+    <a href="https://fatlin.web.app" class="btn">🏠 Volver al juego</a>
+    <button class="btn btn-outline" onclick="retryCapture()">🔄 Reintentar</button>
+  </div>
+</div>
+
+<script>
+  function show(id) {
+    ['state-loading','state-success','state-error'].forEach(s => {
+      document.getElementById(s).style.display = (s === id) ? 'block' : 'none';
+    });
+  }
+
+  function showError(title, msg, detail) {
+    document.getElementById('err-title').textContent = title || 'Error al procesar';
+    document.getElementById('err-msg').textContent   = msg   || 'Contacta soporte si el cargo fue aplicado.';
+    document.getElementById('err-detail').textContent = detail || '';
+    show('state-error');
+  }
+
+  // Parámetros que PayPal envía al return_url:
+  // ?token=PAYID-XXX&PayerID=XXX
+  // La Cloud Function ppCreateOrder también puede agregar ?level=80&uid=XXX
+  const params  = new URLSearchParams(window.location.search);
+  const token   = params.get('token');      // PayPal order ID
+  const payerId = params.get('PayerID');
+  const level   = parseInt(params.get('level') || '0', 10);
+  const uid     = params.get('uid') || '';
+
+  // Si viene de una ventana emergente, notificar al padre y cerrar
+  function notifyParentAndClose(level) {
+    try {
+      if (window.opener && !window.opener.closed) {
+        window.opener.postMessage({ type: 'PAYMENT_SUCCESS', level: level }, '*');
+        setTimeout(() => window.close(), 2000);
+        return true;
+      }
+    } catch(e) {}
+    return false;
+  }
+
+  let _captureAttempts = 0;
+
+  async function doCapture() {
+    if (!token) {
+      showError('Pago cancelado', 'No se recibió confirmación de PayPal. Si no fue cancelado intencionalmente, intenta de nuevo.');
+      return;
+    }
+
+    _captureAttempts++;
+    show('state-loading');
+
+    try {
+      const CAPTURE_ENDPOINT = 'https://us-central1-fatlin.cloudfunctions.net/ppCaptureOrder';
+
+      const response = await fetch(CAPTURE_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: token, payerId, level, uid })
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      // ✅ FIX: alreadyPaid = el pago ya estaba confirmado en Firestore — tratar como éxito
+      if (data.alreadyPaid) {
+        const certLevel = data.level || level;
+        onSuccess(certLevel);
+        return;
+      }
+
+      if (!response.ok || data.error) {
+        // ✅ FIX: reintentar automáticamente 1 vez en sandbox (errores de timing de PayPal)
+        if (_captureAttempts < 2) {
+          console.warn('[paypal-return] Reintentando captura en 3s...', data.error);
+          setTimeout(doCapture, 3000);
+          return;
+        }
+        showError(
+          'Error al capturar pago',
+          data.error || `Error HTTP ${response.status}. Si el cargo fue aplicado, escríbenos.`,
+          `token: ${token} · error: ${data.ppError || ''}`
+        );
+        return;
+      }
+
+      // ✅ FIX: usar level de la respuesta del servidor (más confiable que la URL)
+      const certLevel = data.level || level;
+      onSuccess(certLevel);
+
+    } catch(err) {
+      showError('Error de red', 'No se pudo conectar con el servidor de pagos. Verifica tu conexión.', err.message);
+    }
+  }
+
+  function onSuccess(certLevel) {
+    document.getElementById('cert-detail').textContent =
+      `Certificado Nivel ${certLevel} · ID: ${token.substring(0, 20)}…`;
+    show('state-success');
+
+    // Si es ventana emergente, notificar al juego principal
+    const notified = notifyParentAndClose(certLevel);
+    if (!notified) {
+      // Navegación directa (móvil) — redirigir al juego con parámetro
+      setTimeout(() => {
+        window.location.href = `https://fatlin.web.app?payment_success=1&level=${certLevel}`;
+      }, 3000);
+    }
+  }
+
+  window.retryCapture = doCapture;
+
+  // Ejecutar al cargar
+  doCapture();
+</script>
+</body>
+</html>

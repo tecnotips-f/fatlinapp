@@ -1,0 +1,174 @@
+/* ═══════════════════════════════════════════════════════════════
+   Fatlin AI — fixes_diploma.css
+   FIX A: Certificados 80–400 nv → A4 landscape exacto (1 página)
+   FIX B: Diplomado 480+ nv     → Doble carta horizontal (11×17in)
+   FIX C: Botón imprimir fijo   → siempre visible en móvil
+   Instrucción: agregar en index.html DESPUÉS de fixes_v2.css
+   <link rel="stylesheet" href="css/fixes_diploma.css">
+═══════════════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════════════════
+   A — MODAL DIPLOMA: layout que no desborda
+══════════════════════════════════════════════════════════════ */
+
+#modal-diploma {
+  padding: 0 !important;
+  align-items: stretch !important;
+  justify-content: stretch !important;
+  overflow: hidden !important;
+}
+
+/* Wrapper general: flex column, ocupa toda la pantalla */
+.diploma-wrap {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  height: 100vh !important;
+  max-width: none !important;
+  gap: 0 !important;
+  align-items: center !important;
+}
+
+/* Zona de scroll del certificado: ocupa todo el espacio disponible */
+.diploma-scroll-zone {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 16px 16px 0;
+  min-height: 0; /* necesario para flex-shrink */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Botones: fijos al fondo, nunca debajo del certificado */
+.diploma-actions {
+  flex: 0 0 auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  display: flex !important;
+  gap: 10px !important;
+  padding: 12px 16px !important;
+  background: rgba(5, 15, 35, 0.97) !important;
+  border-top: 1px solid rgba(56, 189, 248, 0.15) !important;
+  justify-content: center !important;
+  position: sticky !important;
+  bottom: 0 !important;
+  z-index: 10 !important;
+}
+
+.diploma-actions .wbtn {
+  flex: 1 !important;
+  max-width: 240px !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   B — CERTIFICADOS 80–400 nv (no-diplomado): A4 landscape
+   A4 landscape = 297 × 210 mm = 1123 × 794 px a 96 dpi
+   Para HD (calidad impresión) usamos 1684 × 1190 px (a 144dpi)
+══════════════════════════════════════════════════════════════ */
+
+#diploma-content:not(.is-diplo) {
+  /* Dimensiones A4 landscape HD */
+  width: 1684px !important;
+  height: 1190px !important;
+  max-width: none !important;
+  aspect-ratio: unset !important;
+  flex-shrink: 0 !important;
+  /* Escalar para que entre en pantalla manteniendo proporciones */
+  transform-origin: top center !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   C — DIPLOMADO 480+ nv: Doble carta landscape (Tabloid/11×17in)
+   11 × 17 in = 1056 × 816 px a 96dpi
+   HD → 1584 × 1224 px a 144dpi
+   Usamos 1700 × 1100 px (proporción 11×17 ≈ 1.545)
+══════════════════════════════════════════════════════════════ */
+
+#diploma-content.is-diplo {
+  width: 1700px !important;
+  height: 1100px !important;
+  max-width: none !important;
+  aspect-ratio: unset !important;
+  flex-shrink: 0 !important;
+  transform-origin: top center !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   D — ESCALA RESPONSIVE: el diploma se achica para caber en pantalla
+   JS calcula el scale exacto; aquí seteamos la transición suave
+══════════════════════════════════════════════════════════════ */
+
+#diploma-content {
+  transition: transform 0.2s ease !important;
+  /* Asegura que el fondo sea sólido para que html2canvas capture bien */
+  background: linear-gradient(145deg, #1a3a6a 0%, #0a1628 40%, #0e2848 100%) !important;
+}
+
+/* La zona de scroll contiene el diploma escalado */
+.diploma-scroll-zone {
+  padding-bottom: 12px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   E — TIPOGRAFÍAS A ESCALA CORRECTA para A4/DobleCarta
+   Todos los tamaños relativos (rem, %) escalan con el transform.
+   Sólo ajustamos los que se ven muy pequeños/grandes en la preview.
+══════════════════════════════════════════════════════════════ */
+
+/* Nombre del graduado — protagonista del certificado */
+.cer-graduate-name {
+  font-size: 1.9rem !important;
+}
+
+/* Título del certificado */
+.cer-title {
+  font-size: 1.45rem !important;
+}
+
+/* Logro */
+.cer-achievement {
+  font-size: .82rem !important;
+  line-height: 1.6 !important;
+}
+
+/* Tópicos */
+.cer-topic-name {
+  font-size: .8rem !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   F — VENTANA DE IMPRESIÓN: página exacta, sin márgenes
+══════════════════════════════════════════════════════════════ */
+
+/* Estos estilos se inyectan dinámicamente en la ventana de impresión
+   por fixes_diploma.js — ver comentario en ese archivo */
+
+/* ══════════════════════════════════════════════════════════════
+   G — MÓVIL: botones siempre visibles, diploma scrolleable
+══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .diploma-actions {
+    padding: 10px 12px !important;
+    gap: 8px !important;
+  }
+
+  .diploma-actions .wbtn {
+    font-size: .85rem !important;
+    padding: .85rem .75rem !important;
+  }
+
+  /* En móvil muy pequeño, apilar botones */
+  @media (max-width: 420px) {
+    .diploma-actions {
+      flex-direction: column !important;
+    }
+    .diploma-actions .wbtn {
+      max-width: 100% !important;
+    }
+  }
+}

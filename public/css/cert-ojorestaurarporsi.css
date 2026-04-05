@@ -1,0 +1,894 @@
+/* ══════════════════════════════════════════════════════════
+   CERTIFICADOS FATLIN AI
+   cert.css — Estilos para renderModulo() y renderDiplomado()
+   Resolución módulos: 1024×768 px horizontal
+   Resolución diplomado: 3307×2283 px · 200 dpi
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Reset base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ══════════════════════════════════════════════════════════
+   WRAPPER COMPARTIDO
+   ══════════════════════════════════════════════════════════ */
+.cert-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.cert-actions {
+  text-align: center;
+}
+
+.btn-print {
+  padding: 12px 28px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: .04em;
+  transition: opacity .2s;
+}
+
+.btn-print:hover { opacity: .88; }
+
+/* ══════════════════════════════════════════════════════════
+   CERTIFICADO DE MÓDULO — 1024 × 768 px
+   ══════════════════════════════════════════════════════════ */
+
+.cert-modulo {
+  width: 1024px;
+  height: 768px;
+  background: #ffffff;
+  font-family: 'Georgia', serif;
+  border: 0.5px solid #e2e8f0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Franja de acento superior */
+.mod-accent-top {
+  height: 8px;
+  flex-shrink: 0;
+  background: linear-gradient(90deg, #1a3a6b, #cd7f32, #1a3a6b);
+}
+
+/* Barra navy superior */
+.mod-navy-bar {
+  height: 34px;
+  background: #1a3a6b;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  flex-shrink: 0;
+}
+
+.mod-nav-txt {
+  font-family: monospace;
+  font-size: 9px;
+  color: #f0c040;
+  letter-spacing: .12em;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Cuerpo principal */
+.mod-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 36px 14px;
+  overflow: hidden;
+}
+
+/* Fila institucional */
+.mod-inst-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.mod-logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mod-logo-svg {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.mod-inst-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: #1a3a6b;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  font-family: sans-serif;
+}
+
+.mod-inst-sub {
+  font-size: 8px;
+  color: #64748b;
+  letter-spacing: .06em;
+  font-family: sans-serif;
+  margin-top: 2px;
+}
+
+.mod-doc-type { text-align: right; }
+
+.mod-doc-lbl {
+  font-size: 7.5px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: #9ca3af;
+  font-family: sans-serif;
+}
+
+.mod-doc-val {
+  font-size: 10px;
+  font-weight: 700;
+  color: #1a3a6b;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-family: sans-serif;
+}
+
+/* Centro del certificado */
+.mod-center {
+  text-align: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.mod-certify-lbl {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: #9ca3af;
+  font-family: sans-serif;
+}
+
+.mod-name {
+  font-size: 46px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.1;
+  font-family: 'Georgia', serif;
+}
+
+.mod-badge {
+  display: inline-block;
+  padding: 5px 18px;
+  border: 2px solid #cd7f32;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: #cd7f32;
+  font-family: sans-serif;
+}
+
+.mod-desc {
+  font-size: 11px;
+  color: #374151;
+  line-height: 1.65;
+  max-width: 720px;
+  margin: 0 auto;
+  font-family: sans-serif;
+  text-align: center;
+}
+
+/* Píldoras PACIE */
+.pacie-row {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.pp {
+  padding: 3px 10px;
+  border-radius: 3px;
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  font-family: sans-serif;
+}
+
+.pp-p { background: #ede9fe; color: #5b21b6; }
+.pp-a { background: #dcfce7; color: #15803d; }
+.pp-c { background: #fef9c3; color: #a16207; }
+.pp-i { background: #fee2e2; color: #b91c1c; }
+.pp-e { background: #dbeafe; color: #1d4ed8; }
+
+/* Métricas */
+.mod-metrics {
+  display: flex;
+  justify-content: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+.mod-metric {
+  padding: 10px 22px;
+  text-align: center;
+  border-right: 1px solid #e2e8f0;
+}
+
+.mod-metric:last-child { border-right: none; }
+
+.mod-mval {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a3a6b;
+  font-family: sans-serif;
+  line-height: 1;
+}
+
+.mod-mlbl {
+  font-size: 7.5px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: #9ca3af;
+  font-family: sans-serif;
+  margin-top: 3px;
+}
+
+/* Franja dorada inferior */
+.mod-accent-bot {
+  height: 5px;
+  background: linear-gradient(90deg, transparent, #f0c040, transparent);
+  flex-shrink: 0;
+}
+
+/* Footer módulo */
+.mod-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 28px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+
+.mod-orgs {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.mod-org {
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: #1a3a6b;
+  font-family: sans-serif;
+}
+
+.mod-org-div {
+  width: 1px;
+  height: 16px;
+  background: #cbd5e1;
+}
+
+.mod-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mod-date-lbl {
+  font-size: 7px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: #9ca3af;
+  font-family: sans-serif;
+}
+
+.mod-date-val {
+  font-size: 9px;
+  font-weight: 600;
+  color: #374151;
+  font-family: sans-serif;
+}
+
+.mod-cert-id {
+  font-family: monospace;
+  font-size: 7.5px;
+  color: #9ca3af;
+}
+
+.mod-qr {
+  width: 72px;
+  height: 72px;
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 4px;
+}
+
+.mod-qr img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ══════════════════════════════════════════════════════════
+   DIPLOMADO PACIE — 3307 × 2383 px · 200 dpi
+   Orientación: HORIZONTAL (landscape) A3
+   A escala nativa: fuentes ×2, emblemas 160px, QR 280px
+   ══════════════════════════════════════════════════════════ */
+
+.cert-diplomado {
+  width: 4200px;
+  height: 2970px;
+  font-family: 'Georgia', serif;
+  overflow: hidden;
+  position: relative;
+  background: #fff;
+}
+
+/* Marco dorado doble */
+.cert-diplomado::before {
+  content: '';
+  position: absolute;
+  inset: 28px;
+  border: 6px solid #c8920a;
+  pointer-events: none;
+  z-index: 20;
+}
+.cert-diplomado::after {
+  content: '';
+  position: absolute;
+  inset: 56px;
+  border: 2px solid rgba(26, 58, 107, .30);
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* Esquinas caladas */
+.dc-corn { position: absolute; z-index: 21; }
+
+/* Watermark */
+.dc-wm {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: .022;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Layout interior */
+.dc-inn {
+  position: relative;
+  width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120px 380px 0;
+  z-index: 1;
+}
+
+/* Spacers */
+.dc-g1 { flex: 1.7; }
+.dc-g2 { flex: 2; }
+.dc-g3 { flex: 1.9; }
+.dc-g4 { flex: 1.5; }
+.dc-g5 { flex: 1.3; }
+.dc-g6 { flex: 1.1; }
+.dc-g7 { flex: .85; }
+
+/* ── Header horizontal: logos en extremos ── */
+.dc-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  flex-shrink: 0;
+}
+.dc-hdr-sep {
+  width: 4px;
+  height: 320px;
+  background: linear-gradient(180deg, transparent, #c8920a 25%, #c8920a 75%, transparent);
+  flex-shrink: 0;
+  margin: 0 80px;
+}
+
+/* Bloque de marca — fila horizontal */
+.dc-hdr-brand {
+  display: flex;
+  align-items: center;
+  gap: 44px;
+  flex: 1;
+}
+.dc-hdr-brand-r {
+  justify-content: flex-end;
+}
+
+/* Imagen PACIE: 160×160 px */
+.dc-hdr-logo {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Texto junto al logo */
+.dc-hdr-text {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.dc-hdr-text-r { text-align: right; }
+
+/* Nombre institución */
+.dc-hdr-name {
+  font-family: sans-serif;
+  font-size: 72px;
+  font-weight: 700;
+  letter-spacing: 14px;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.dc-hdr-teal { color: #0bbdb6; }
+.dc-hdr-blue {
+  background: linear-gradient(135deg, #38bdf8 0%, #0284c7 50%, #075985 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Subtítulo */
+.dc-hdr-sub {
+  font-family: sans-serif;
+  font-size: 28px;
+  letter-spacing: 5px;
+  color: #64748b;
+  text-transform: uppercase;
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* ── Divisores ── */
+.dc-dv {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  flex-shrink: 0;
+}
+.dc-ln {
+  flex: 1;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #c8920a 25%, #c8920a 75%, transparent);
+}
+.dc-dm {
+  width: 36px; height: 36px;
+  background: #c8920a;
+  transform: rotate(45deg);
+  flex-shrink: 0;
+  margin: 0 48px;
+}
+.dc-ds {
+  width: 18px; height: 18px;
+  background: #1a3a6b;
+  transform: rotate(45deg);
+  flex-shrink: 0;
+  margin: 0 16px;
+  opacity: .4;
+}
+.dc-dvstar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  flex-shrink: 0;
+}
+.dc-dvstar .dc-ln { opacity: .6; height: 2px; }
+.dc-dvthin {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(26,58,107,.14) 25%, rgba(26,58,107,.14) 75%, transparent);
+  flex-shrink: 0;
+}
+
+/* ── Tipo documento / título ── */
+.dc-tb { text-align: center; flex-shrink: 0; width: 100%; }
+.dc-doctype {
+  font-size: 34px;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  color: #94a3b8;
+  font-weight: 400;
+  margin-bottom: 36px;
+  font-family: sans-serif;
+}
+.dc-mtitle {
+  font-size: 96px;
+  font-weight: 700;
+  color: #0f2456;
+  line-height: 1.1;
+  letter-spacing: .01em;
+}
+.dc-msub {
+  font-size: 42px;
+  color: #c8920a;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  font-weight: 400;
+  margin-top: 28px;
+  font-family: sans-serif;
+}
+
+/* ── Nombre ── */
+.dc-nb { text-align: center; flex-shrink: 0; width: 100%; }
+.dc-clbl {
+  font-size: 34px;
+  letter-spacing: 18px;
+  text-transform: uppercase;
+  color: #94a3b8;
+  font-weight: 400;
+  margin-bottom: 28px;
+  font-family: sans-serif;
+}
+.dc-cname {
+  font-size: 200px;
+  font-weight: 700;
+  color: #0f2456;
+  line-height: 1.05;
+}
+.dc-cdesc {
+  font-size: 52px;
+  color: #374151;
+  line-height: 1.75;
+  margin: 48px auto 0;
+  max-width: 2700px;
+  font-weight: 400;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+/* ── Título propio ── */
+.dc-tp { text-align: center; flex-shrink: 0; width: 100%; }
+.dc-tptext {
+  font-size: 100px;
+  font-weight: 700;
+  color: #1a3a6b;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  font-family: sans-serif;
+}
+.dc-tpbar {
+  width: 800px; height: 8px;
+  background: linear-gradient(90deg, #c8920a, #f0c040, #c8920a);
+  border-radius: 4px;
+  margin: 28px auto 0;
+}
+
+/* ── Píldoras PACIE ── */
+.dc-pacie-row {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+.dpp {
+  padding: 22px 60px;
+  border-radius: 8px;
+  font-size: 36px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  font-family: sans-serif;
+}
+.dpp-p { background: #eff6ff; color: #1e40af; border: 3px solid #3b82f6; }
+.dpp-a { background: #f0fdf4; color: #166534; border: 3px solid #22c55e; }
+.dpp-c { background: #fefce8; color: #854d0e; border: 3px solid #eab308; }
+.dpp-i { background: #fdf2f8; color: #831843; border: 3px solid #ec4899; }
+.dpp-e { background: #f0fdfa; color: #134e4a; border: 3px solid #14b8a6; }
+
+/* ── Métricas ── */
+.dc-mets {
+  display: flex;
+  flex-shrink: 0;
+  width: 100%;
+  border: 3px solid #e2e8f0;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #e2e8f0;
+  gap: 3px;
+}
+.dc-met {
+  flex: 1;
+  padding: 36px 20px;
+  text-align: center;
+  background: #fff;
+}
+.dc-mv {
+  font-size: 72px;
+  font-weight: 700;
+  color: #0f2456;
+  line-height: 1;
+  font-family: sans-serif;
+}
+.dc-ml {
+  font-size: 17px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: #64748b;
+  margin-top: 10px;
+  font-weight: 400;
+  font-family: sans-serif;
+}
+
+/* ── Firmas ── */
+.dc-sigwrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 100%;
+}
+.dc-sigrow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 200px;
+}
+.dc-sig {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.dc-svgw {
+  height: 130px;
+  display: flex;
+  align-items: flex-end;
+}
+.dc-sline {
+  width: 620px;
+  height: 3px;
+  background: #1a3a6b;
+  margin: 20px auto 0;
+}
+.dc-sname {
+  font-size: 44px;
+  font-weight: 700;
+  color: #0f2456;
+  margin-top: 20px;
+  text-align: center;
+  font-family: sans-serif;
+}
+.dc-srole {
+  font-size: 28px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 400;
+  margin-top: 8px;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+/* ── Huella digital SHA-256 ── */
+.dc-huella-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  flex-shrink: 0;
+  width: 100%;
+  padding: 30px 0;
+}
+.dc-huella-label {
+  font-size: 26px;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  color: #94a3b8;
+  font-weight: 400;
+  font-family: sans-serif;
+}
+.dc-huella-id {
+  font-family: 'Courier New', monospace;
+  font-size: 36px;
+  color: #1a3a6b;
+  letter-spacing: 4px;
+  font-weight: 700;
+}
+.dc-huella-hash {
+  font-family: 'Courier New', monospace;
+  font-size: 26px;
+  color: #64748b;
+  letter-spacing: 3px;
+  word-break: break-all;
+  text-align: center;
+  max-width: 2800px;
+  line-height: 1.7;
+}
+
+/* ── Footer ── */
+.dc-foot {
+  background: transparent;
+  margin: 0 -380px;
+  width: calc(100% + 760px);
+  padding: 40px 420px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  position: relative;
+  min-height: 220px;
+  overflow: visible;
+  border-top: 2px solid rgba(200,146,10,0.3);
+}
+.dc-foot::before { display: none; }
+.dc-forgs { display: flex; align-items: center; }
+.dc-forg {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(240,192,64,.85);
+  font-family: sans-serif;
+}
+.dc-fsep {
+  color: rgba(240,192,64,.3);
+  margin: 0 32px;
+  font-size: 36px;
+}
+.dc-fmid { text-align: center; }
+.dc-fpl {
+  font-size: 24px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.4);
+  font-family: sans-serif;
+}
+.dc-fdt {
+  font-size: 36px;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 8px;
+  font-family: sans-serif;
+}
+.dc-fid {
+  font-size: 22px;
+  color: rgba(240,192,64,.65);
+  margin-top: 8px;
+  letter-spacing: 1px;
+  font-family: 'Courier New', monospace;
+}
+
+/* QR: fondo blanco, sin dorado, más grande */
+.dc-fqr {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 14px;
+  width: 300px;
+  height: 300px;
+  border: 5px solid #ecebe8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.dc-fqr img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 4px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   PREVIEW RESPONSIVO — el wrapper ocupa el ancho disponible,
+   el certificado nativo se escala con transform:scale()
+   FIX: se usa width:100% + position:relative para que el
+   ResizeObserver calcule el ancho real del contenedor.
+   ══════════════════════════════════════════════════════════ */
+
+.cert-modulo-preview {
+  /* Ocupa todo el ancho disponible, sin max-width fijo */
+  width: 100%;
+  /* La altura se calcula dinámicamente por JS: h = w * 768/1024 */
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  box-shadow: 0 4px 24px rgba(0,0,0,.12);
+  /* Mínimo visual mientras JS calcula */
+  min-height: 60px;
+}
+
+.cert-modulo-preview .cert-modulo {
+  /* Posición absoluta: el scale() se aplica desde top-left */
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* transform-origin definido también en JS, aquí como fallback */
+  transform-origin: top left;
+}
+
+.cert-diplomado-preview {
+  width: 100%;
+  position: relative;
+  overflow: visible;       /* ← nunca cortar el footer/QR */
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(0,0,0,.18);
+  min-height: 60px;
+}
+
+.cert-diplomado-preview .cert-diplomado {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+}
+
+/* ══════════════════════════════════════════════════════════
+   PRINT — imprime el elemento a tamaño nativo (via printCert)
+   Las reglas aquí son para el caso de window.print() directo
+   ══════════════════════════════════════════════════════════ */
+
+@media print {
+  /* Ocultar controles de pantalla */
+  .cert-actions { display: none !important; }
+
+  /* Quitar preview wrappers y mostrar el cert directamente */
+  .cert-modulo-preview,
+  .cert-diplomado-preview {
+    overflow: visible !important;
+    width: auto !important;
+    height: auto !important;
+    position: static !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  /* Certificados: tamaño nativo, sin transform */
+  .cert-modulo {
+    width: 1024px !important;
+    height: 768px !important;
+    transform: none !important;
+    position: static !important;
+  }
+
+  .cert-diplomado {
+    width: 4200px !important;
+    height: 2970px !important;
+    transform: none !important;
+    position: static !important;
+  }
+
+  body { background: none; margin: 0; padding: 0; }
+
+  @page { margin: 0; size: auto; }
+}

@@ -1,0 +1,69 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /* ───────────────────────────────
+       USUARIOS (perfil y progreso)
+       ─────────────────────────────── */
+    match /artifacts/fatlin-ai-v1/users/{userId}/{document=**} {
+      allow read: if request.auth != null
+                  && request.auth.uid == userId;
+      allow write: if false;
+    }
+
+    /* ───────────────────────────────
+       DIPLOMAS (verificación pública)
+       ─────────────────────────────── */
+    match /fatlin_diplomas_fatlin-ai-v1/{certId} {
+      allow read: if true;                          // lectura pública para verify.html
+      allow write: if request.auth != null;         // cualquier usuario logueado puede guardar
+    }
+
+    /* ───────────────────────────────
+       RANKING
+       ─────────────────────────────── */
+    match /fatlin_ranking_fatlin-ai-v1/{userId} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.auth.uid == userId;
+    }
+
+    /* ───────────────────────────────
+       SEMANAL / LIGAS
+       ─────────────────────────────── */
+    match /fatlin_weekly_fatlin-ai-v1/{entryId} {
+      allow read: if true;
+      allow create: if request.auth != null
+                    && request.resource.data.uid == request.auth.uid;
+      allow update: if request.auth != null
+                    && resource.data.uid == request.auth.uid;
+    }
+
+    /* ───────────────────────────────
+       USUARIOS — paidLevels (RT listener)
+       Solo Functions (admin SDK) pueden escribir.
+       El cliente solo lee su propio documento.
+       ─────────────────────────────── */
+    match /users/{userId} {
+      allow read: if request.auth != null
+                  && request.auth.uid == userId;
+      allow write: if false;
+    }
+
+    /* ───────────────────────────────
+       PAGOS
+       ─────────────────────────────── */
+    match /fatlin_payments/{docId} {
+      allow read: if request.auth != null
+                  && resource.data.uid == request.auth.uid;
+      allow create, update, delete: if false;
+    }
+
+    /* ───────────────────────────────
+       BLOQUEO GLOBAL
+       ─────────────────────────────── */
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

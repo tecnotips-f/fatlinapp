@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Verificar Diploma — Fatlin AI</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #075985 0%, #0369a1 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #1e293b;
+    }
+
+    .card {
+      background: white;
+      border-radius: 2rem;
+      padding: 2.5rem 2rem;
+      max-width: 460px;
+      width: 100%;
+      box-shadow: 0 30px 80px rgba(0,0,0,.4);
+      text-align: center;
+      animation: cardIn .4s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes cardIn {
+      from { transform: scale(.92) translateY(20px); opacity: 0; }
+      to   { transform: scale(1)   translateY(0);    opacity: 1; }
+    }
+
+    .logo { font-size: 3rem; margin-bottom: .5rem; }
+    .brand { font-size: 1.3rem; font-weight: 800; color: #0c4a6e; letter-spacing: .08em; text-transform: uppercase; }
+    .subtitle { font-size: .75rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; margin-top: .2rem; margin-bottom: 1.75rem; }
+
+    /* Estado: cargando */
+    .state-loading .spinner {
+      width: 48px; height: 48px;
+      border: 4px solid #e2e8f0;
+      border-top: 4px solid #0ea5e9;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .state-loading p { color: #64748b; font-size: .9rem; font-weight: 600; }
+
+    /* Estado: válido */
+    .badge-valid {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: #f0fdf4; color: #15803d;
+      border: 2px solid #86efac;
+      border-radius: 2rem; padding: .5rem 1.25rem;
+      font-weight: 800; font-size: .9rem;
+      margin-bottom: 1.5rem;
+    }
+    .badge-valid .dot {
+      width: 10px; height: 10px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50%       { transform: scale(1.4); opacity: .7; }
+    }
+
+    .cert-id {
+      font-family: monospace;
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: .75rem;
+      padding: .5rem 1rem;
+      font-size: .8rem;
+      color: #0369a1;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      word-break: break-all;
+    }
+
+    .info-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: .75rem; margin-bottom: 1.5rem;
+    }
+    .info-box {
+      background: #f0f9ff;
+      border: 1.5px solid #bae6fd;
+      border-radius: 1rem;
+      padding: .85rem .75rem;
+    }
+    .info-box .lbl {
+      font-size: .6rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: #64748b; margin-bottom: .3rem;
+    }
+    .info-box .val {
+      font-size: 1.05rem; font-weight: 800; color: #0c4a6e;
+    }
+    .info-box.full { grid-column: 1 / -1; }
+
+    .orgs {
+      display: flex; align-items: center; justify-content: center;
+      gap: 1.5rem; margin-top: 1.5rem; padding-top: 1.25rem;
+      border-top: 1px solid #e2e8f0;
+    }
+    .org { display: flex; flex-direction: column; align-items: center; gap: .3rem; }
+    .org-logo {
+      width: 44px; height: 44px;
+      background: #f8fafc; border: 1.5px solid #e2e8f0;
+      border-radius: 8px; display: flex; align-items: center;
+      justify-content: center; font-size: 1.4rem;
+    }
+    .org-name { font-size: .55rem; font-weight: 800; color: #0c4a6e; text-transform: uppercase; letter-spacing: .06em; }
+
+    /* Estado: inválido */
+    .badge-invalid {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: #fef2f2; color: #dc2626;
+      border: 2px solid #fca5a5;
+      border-radius: 2rem; padding: .5rem 1.25rem;
+      font-weight: 800; font-size: .9rem;
+      margin-bottom: 1rem;
+    }
+    .invalid-msg {
+      color: #64748b; font-size: .85rem; line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Estado: sin ID */
+    .no-id-msg { color: #64748b; font-size: .9rem; line-height: 1.6; margin-bottom: 1.5rem; }
+
+    .back-btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: #0284c7; color: white;
+      border: none; border-radius: 1.5rem;
+      padding: .75rem 1.75rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700; font-size: .9rem;
+      cursor: pointer; text-decoration: none;
+      transition: transform .15s, opacity .15s;
+    }
+    .back-btn:active { transform: scale(.96); }
+
+    .powered {
+      margin-top: 1.25rem;
+      font-size: .65rem; color: #94a3b8;
+      font-weight: 600; letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">🎓</div>
+  <div class="brand">Fatlin AI</div>
+  <div class="subtitle">Verificador de Diplomas</div>
+
+  <!-- ESTADO CARGANDO -->
+  <div id="state-loading" class="state-loading">
+    <div class="spinner"></div>
+    <p>Verificando diploma…</p>
+  </div>
+
+  <!-- ESTADO VÁLIDO -->
+  <div id="state-valid" style="display:none">
+    <div class="badge-valid">
+      <span class="dot"></span>
+      ✅ Diploma Auténtico y Válido
+    </div>
+    <div class="cert-id" id="v-cert-id"></div>
+    <div class="info-grid">
+      <div class="info-box full">
+        <div class="lbl">👤 Nombre del participante</div>
+        <div class="val" id="v-name"></div>
+      </div>
+      <div class="info-box">
+        <div class="lbl">📊 Niveles completados</div>
+        <div class="val" id="v-level"></div>
+      </div>
+      <div class="info-box">
+        <div class="lbl">🏆 Categoría</div>
+        <div class="val" id="v-tier"></div>
+      </div>
+      <div class="info-box full">
+        <div class="lbl">📚 Programa</div>
+        <div class="val" style="font-size:.85rem" id="v-title"></div>
+      </div>
+      <div class="info-box full">
+        <div class="lbl">📅 Fecha de emisión</div>
+        <div class="val" style="font-size:.85rem" id="v-date"></div>
+      </div>
+    </div>
+    <div class="orgs">
+      <div class="org">
+        <div class="org-logo">🌐</div>
+        <div class="org-name">FATLA</div>
+      </div>
+      <div class="org">
+        <div class="org-logo">📘</div>
+        <div class="org-name">PACIE</div>
+      </div>
+      <div class="org">
+        <div class="org-logo">📡</div>
+        <div class="org-name">ASOMTV</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ESTADO INVÁLIDO -->
+  <div id="state-invalid" style="display:none">
+    <div class="badge-invalid">❌ Diploma No Encontrado</div>
+    <p class="invalid-msg">
+      El código <strong id="v-bad-id"></strong> no corresponde a ningún diploma registrado en nuestra base de datos.<br><br>
+      Si crees que es un error, contacta al emisor del diploma.
+    </p>
+    <a href="https://fatlin.web.app" class="back-btn">🏠 Ir a Fatlin AI</a>
+  </div>
+
+  <!-- ESTADO SIN ID -->
+  <div id="state-noid" style="display:none">
+    <p class="no-id-msg">
+      Esta página verifica la autenticidad de diplomas emitidos por <strong>Fatlin AI</strong>.<br><br>
+      Escanea el código QR del diploma para verificarlo.
+    </p>
+    <a href="https://fatlin.web.app" class="back-btn">🏠 Ir a Fatlin AI</a>
+  </div>
+
+  <div class="powered">Powered by Fatlin AI · fatlin.web.app</div>
+</div>
+
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey:            "AIzaSyAByrBFOD9-Ji93nT3s31As_xN0tWS5_QE",
+    authDomain:        "fatlin.firebaseapp.com",
+    projectId:         "fatlin",
+    storageBucket:     "fatlin.appspot.com",
+    messagingSenderId: "88080333098",
+    appId:             "1:88080333098:web:6a981dfc448b9ea670c653"
+  };
+
+  const APP_ID = 'fatlin-ai-v1';
+  const app    = initializeApp(firebaseConfig);
+  const db     = getFirestore(app, "fatlindb");
+
+  function show(id) {
+    ['state-loading','state-valid','state-invalid','state-noid'].forEach(s => {
+      document.getElementById(s).style.display = (s === id) ? 'block' : 'none';
+    });
+  }
+
+  function formatDate(ts) {
+    if (!ts) return '—';
+    const d = new Date(ts);
+    return d.toLocaleDateString('es-ES', { day:'2-digit', month:'long', year:'numeric' });
+  }
+
+  async function verify() {
+    const params   = new URLSearchParams(window.location.search);
+    const certId   = params.get('id');
+
+    if (!certId) { show('state-noid'); return; }
+
+    try {
+      const snap = await getDoc(doc(db, `fatlin_diplomas_${APP_ID}`, certId));
+
+      if (!snap.exists() || snap.data().valid === false) {
+        document.getElementById('v-bad-id').textContent = certId;
+        show('state-invalid');
+        return;
+      }
+
+      const d = snap.data();
+      document.getElementById('v-cert-id').textContent  = certId;
+      document.getElementById('v-name').textContent     = d.userName    || '—';
+      document.getElementById('v-level').textContent    = (d.level || '—') + ' niveles';
+      document.getElementById('v-tier').textContent     = d.tier        || '—';
+      document.getElementById('v-title').textContent    = d.tierTitle   || 'Metodología PACIE';
+      document.getElementById('v-date').textContent     = d.issuedAtStr || formatDate(d.issuedAt);
+      show('state-valid');
+
+    } catch(e) {
+      console.error('[Verify]', e);
+      document.getElementById('v-bad-id').textContent = certId || '(sin ID)';
+      show('state-invalid');
+    }
+  }
+
+  verify();
+</script>
+
+</body>
+</html>

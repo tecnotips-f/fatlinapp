@@ -1,0 +1,52 @@
+{
+  "name": "Fatlin AI",
+  "short_name": "Fatlin",
+  "description": "Aprende la Metodología PACIE jugando. Preguntas generadas con IA desde fuentes oficiales de FATLA.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d1117",
+  "theme_color": "#f5a623",
+  "lang": "es",
+  "categories": ["education", "games"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ],
+  "screenshots": [
+    {
+      "src": "/icons/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Jugar ahora",
+      "short_name": "Jugar",
+      "description": "Ir directamente al juego",
+      "url": "/",
+      "icons": [
+        {
+          "src": "icons/icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Verificar Diploma",
+      "short_name": "Diploma",
+      "description": "Verificar un certificado emitido",
+      "url": "/verify-pending.html",
+      "icons": [
+        {
+          "src": "icons/icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false
+}

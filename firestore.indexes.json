@@ -1,0 +1,29 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "fatlin_ranking_fatlin-ai-v1",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "score",  "order": "DESCENDING" },
+        { "fieldPath": "level",  "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "fatlin_weekly_fatlin-ai-v1",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "week",   "order": "ASCENDING"  },
+        { "fieldPath": "score",  "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "fatlin_weekly_fatlin-ai-v1",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "week",   "order": "ASCENDING"  },
+        { "fieldPath": "level",  "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

@@ -1,0 +1,17 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="fglow"><feGaussianBlur stdDeviation="2" result="cb"/><feMerge><feMergeNode in="cb"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <radialGradient id="fbg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgba(56,189,248,.15)"/>
+      <stop offset="100%" stop-color="rgba(56,189,248,0)"/>
+    </radialGradient>
+  </defs>
+  <circle cx="50" cy="50" r="48" fill="url(#fbg)"/>
+  <path d="M50 90 L90 70 L50 50 L10 70 Z" fill="#075985"/>
+  <path d="M50 82 L90 62 L50 42 L10 62 Z" fill="#0369a1"/>
+  <path d="M50 74 L90 54 L50 34 L10 54 Z" fill="#0284c7"/>
+  <path d="M50 66 L90 46 L50 26 L10 46 Z" fill="#0ea5e9"/>
+  <path d="M50 58 L90 38 L50 18 L10 38 Z" fill="#38bdf8"/>
+  <path d="M50 50 L75 38 L50 26 L25 38 Z" fill="#7dd3fc" filter="url(#fglow)"/>
+  <circle cx="50" cy="38" r="3.5" fill="white" opacity="0.9"/>
+</svg>

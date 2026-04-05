@@ -1,0 +1,33 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+firebase-debug.log*
+firebase-debug.*.log*
+
+# Firebase cache
+.firebase/
+
+# Dependency directories
+node_modules/
+
+# Runtime data
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage
+coverage/
+.nyc_output
+
+# dotenv
+.env
+
+# dataconnect
+.dataconnect
+
+# OS
+.DS_Store
+Thumbs.db
